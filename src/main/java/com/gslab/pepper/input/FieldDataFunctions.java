@@ -1,5 +1,8 @@
 package com.gslab.pepper.input;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
@@ -10,8 +13,6 @@ import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The FieldDataFunctions is is set of builtin template function and can be invoked within {{ }}
@@ -37,7 +38,8 @@ public class FieldDataFunctions {
     //Generate sequence of number for given sequence id
     private static Map<String, AtomicLong> sequenceMap = new ConcurrentHashMap<>();
 
-    private static final Logger log = Logger.getLogger(FieldDataFunctions.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(FieldDataFunctions.class);
+
 
     /**
      * This method returns current timestamp in milliseconds
@@ -68,7 +70,7 @@ public class FieldDataFunctions {
             return randomTimestamp;
 
         } catch (Exception e) {
-            log.log(Level.SEVERE, "Failed to parse range date", e);
+            LOGGER.log(Level.ERROR, "Failed to parse range date", e);
             throw new IllegalArgumentException(e);
 
         }
@@ -85,10 +87,10 @@ public class FieldDataFunctions {
 
         try {
 
-           return DateTime.now().toString(format);
+            return DateTime.now().toString(format);
 
         } catch (Exception e) {
-            log.log(Level.SEVERE, "Failed to parse current date", e);
+            LOGGER.log(Level.ERROR, "Failed to parse current date", e);
             throw new IllegalArgumentException(e);
 
         }
@@ -314,7 +316,7 @@ public class FieldDataFunctions {
      * @return random user name
      */
     public static String USERNAME() {
-       return new StringBuffer(FIRST_NAME()).append(".").append(LAST_NAME()).toString();
+        return new StringBuffer(FIRST_NAME()).append(".").append(LAST_NAME()).toString();
     }
 
     /**
@@ -332,7 +334,7 @@ public class FieldDataFunctions {
             }
             randomIPV4 = Inet4Address.getByAddress(randomBytes).getHostAddress();
         } catch (UnknownHostException e) {
-            log.log(Level.SEVERE, "Failed to generate IPV4", e);
+            LOGGER.log(Level.ERROR, "Failed to generate IPV4", e);
         }
         return randomIPV4;
     }
@@ -352,7 +354,7 @@ public class FieldDataFunctions {
             }
             randomIPV6 = Inet6Address.getByAddress(randomBytes).getHostAddress();
         } catch (UnknownHostException e) {
-            log.log(Level.SEVERE, "Failed to generate IPV4", e);
+            LOGGER.log(Level.ERROR, "Failed to generate IPV4", e);
         }
         return randomIPV6;
     }
@@ -372,7 +374,7 @@ public class FieldDataFunctions {
 
         } catch (Exception exc) {
 
-            log.log(Level.SEVERE, "failed to load first name, last name CSV files", exc);
+            LOGGER.log(Level.ERROR, "failed to load first name, last name CSV files", exc);
 
         }
     }

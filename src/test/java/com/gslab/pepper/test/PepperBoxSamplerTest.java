@@ -42,7 +42,7 @@ public class PepperBoxSamplerTest {
 
     private static final String ZKHOST = "127.0.0.1";
     private static final String BROKERHOST = "127.0.0.1";
-    private static final String BROKERPORT = "9092";
+    private static final String BROKERPORT = "9093";
     private static final String TOPIC = "test";
 
     private EmbeddedZookeeper zkServer = null;

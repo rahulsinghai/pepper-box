@@ -207,7 +207,8 @@ PepperBoxLoadGenerator is console plaintext load generation utility.
 Command,
 
 ```
-java -cp pepper-box-1.0.jar  com.gslab.pepper.PepperBoxLoadGenerator --schema-file <schema file absolute path> --producer-config-file <producer properties absoulte path>  --throughput-per-producer <throughput rate per producer> --test-duration <test duration in seconds> --num-producers <number of producers>
+java -cp pepper-box-1.0.jar com.gslab.pepper.PepperBoxLoadGenerator --schema-file <schema file absolute path> --producer-config-file <producer properties absoulte path>  --throughput-per-producer <throughput rate per producer> --test-duration <test duration in seconds> --num-producers <number of producers>
+--schema-file ~/work/github/pepper-box/src/main/resources/com/gslab/pepper/input/sample.schema --producer-config-file ~/work/github/pepper-box/src/main/resources/com/gslab/pepper/input/producer.properties --throughput-per-producer 10 --test-duration 30 --num-producers 1
 ```
 Example
 

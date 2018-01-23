@@ -1,6 +1,5 @@
 package com.gslab.pepper.config.plaintext;
 
-
 import com.gslab.pepper.loadgen.BaseLoadGenerator;
 import com.gslab.pepper.loadgen.impl.PlaintTextLoadGenerator;
 import com.gslab.pepper.util.PropsKeys;
@@ -10,8 +9,8 @@ import org.apache.jmeter.engine.event.LoopIterationListener;
 import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
-import org.apache.jorphan.logging.LoggingManager;
-import org.apache.log.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 
@@ -24,7 +23,7 @@ import javax.swing.*;
  */
 public class PlainTextConfigElement extends ConfigTestElement implements TestBean, LoopIterationListener {
 
-    private static final Logger log = LoggingManager.getLoggerForClass();
+    private static final Logger LOGGER = LogManager.getLogger(PlainTextConfigElement.class);
 
     //Input schema template could be json, xml, csv or custom plain text format
     private String jsonSchema;
@@ -53,7 +52,7 @@ public class PlainTextConfigElement extends ConfigTestElement implements TestBea
                 generator = new PlaintTextLoadGenerator(getJsonSchema());
 
             } catch (Exception e) {
-                log.error("Failed to create PlaintTextLoadGenerator instance", e);
+                LOGGER.error("Failed to create PlaintTextLoadGenerator instance", e);
             }
 
         }

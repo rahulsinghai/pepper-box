@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="baseDir">logs</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- Console Appender -->
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout pattern="%style{%d{yyyy-MMM-dd HH:mm:ss.SSS a}}{yellow} %highlight{%-5level}{FATAL=bg_red, ERROR=red, WARN=yellow, INFO=green}  %logger{36} [%t] - %msg%n"/>
+        </Console>
+
+        <!-- Rolling File Appender. Will create up to 100 archives on the same day (1-100) that are stored in a directory based on the current year and month. All files under the base directory that match the "*/pepper-box-*.log.json.gz" glob and are 30 days old or older are deleted at rollover time, but keep the most recent 100 GB or the most recent 10 files, whichever comes first -->
+        <RollingFile name="JSONLogfileAppender" fileName="${baseDir}/pepper-box.log.json" filePattern="${baseDir}/$${date:yyyy-MM}/pepper-box-%d{yyyy-MM-dd}-%i.log.json.gz">
+            <JSONLayout compact="true" eventEol="true"/>
+            <BurstFilter level="INFO" rate="2" maxBurst="10"/>
+            <Policies>
+                <OnStartupTriggeringPolicy minSize="1024"/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+                <TimeBasedTriggeringPolicy interval="6" modulate="true" />
+            </Policies>
+            <DefaultRolloverStrategy max="100">
+                <Delete basePath="${baseDir}" maxDepth="2">
+                    <IfFileName glob="*/pepper-box-*.log.json.gz" />
+                    <IfLastModified age="30d">
+                        <IfAny>
+                            <IfAccumulatedFileSize exceeds="100 GB" />
+                            <IfAccumulatedFileCount exceeds="10" />
+                        </IfAny>
+                    </IfLastModified>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+        <Async name="AsyncAppender" bufferSize="80">
+            <AppenderRef ref="JSONLogfileAppender"/>
+        </Async>
+    </Appenders>
+
+    <Loggers>
+        <Logger name="org.apache.zookeeper" level="WARN" additivity="false">
+            <AppenderRef ref="AsyncAppender" />
+            <AppenderRef ref="ConsoleAppender" />
+        </Logger>
+
+        <Root level="INFO">
+            <AppenderRef ref="AsyncAppender" />
+            <AppenderRef ref="ConsoleAppender" />
+        </Root>
+    </Loggers>
+</Configuration>

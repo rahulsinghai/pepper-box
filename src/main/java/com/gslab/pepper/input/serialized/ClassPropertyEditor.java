@@ -9,6 +9,9 @@ import org.apache.jmeter.testbeans.gui.GenericTestBeanCustomizer;
 import org.apache.jmeter.testbeans.gui.TableEditor;
 import org.apache.jmeter.testbeans.gui.TestBeanGUI;
 import org.apache.jmeter.testbeans.gui.TestBeanPropertyEditor;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,8 +21,6 @@ import java.beans.*;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The ClassPropertyEditor is custom UI component for SerializedConfigElement class. This UI records class name and populates fields in table.
@@ -30,7 +31,8 @@ import java.util.logging.Logger;
  */
 public class ClassPropertyEditor extends PropertyEditorSupport implements ActionListener, TestBeanPropertyEditor, ClearGui {
 
-    private static Logger LOGGER = Logger.getLogger(PepperBoxLoadGenerator.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(ClassPropertyEditor.class);
+
     //input class field
     private final JTextField textField = new JTextField();
 
@@ -156,7 +158,7 @@ public class ClassPropertyEditor extends PropertyEditorSupport implements Action
 
         } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException e) {
             JOptionPane.showMessageDialog(null, "Failed to load class properties : " + e.getMessage(), "ERROR: Failed to load class properties!" , JOptionPane.ERROR_MESSAGE);
-            LOGGER.log(Level.SEVERE, "Failed to load class properties", e);
+            LOGGER.log(Level.ERROR, "Failed to load class properties", e);
         }
 
     }

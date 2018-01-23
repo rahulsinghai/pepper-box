@@ -1,4 +1,3 @@
-
 package com.gslab.pepper.sampler;
 
 import com.eclipsesource.json.*;
@@ -10,13 +9,13 @@ import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
 import org.apache.jmeter.threads.JMeterContextService;
-import org.apache.jorphan.logging.LoggingManager;
 import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.protocol.SecurityProtocol;
-import org.apache.log.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 
@@ -44,7 +43,7 @@ public class PepperBoxKafkaSampler extends AbstractJavaSamplerClient {
     //Message placeholder key
     private String placeHolder;
 
-    private static final Logger log = LoggingManager.getLoggerForClass();
+    private static final Logger LOGGER = LogManager.getLogger(PepperBoxKafkaSampler.class);
 
     /**
      * Set default parameters and their values
@@ -142,7 +141,7 @@ public class PepperBoxKafkaSampler extends AbstractJavaSamplerClient {
             sampleResult.sampleEnd();
 
         } catch (Exception e) {
-            log.error("Failed to send message", e);
+            LOGGER.error("Failed to send message", e);
             sampleResult.setResponseData(e.getMessage(), StandardCharsets.UTF_8.name());
             sampleResult.setSuccessful(false);
             sampleResult.sampleEnd();
@@ -190,7 +189,7 @@ public class PepperBoxKafkaSampler extends AbstractJavaSamplerClient {
                 }
             } catch (IOException | KeeperException | InterruptedException e) {
 
-                log.error("Failed to get broker information", e);
+                LOGGER.error("Failed to get broker information", e);
 
             }
 

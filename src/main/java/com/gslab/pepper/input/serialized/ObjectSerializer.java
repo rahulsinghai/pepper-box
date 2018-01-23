@@ -1,13 +1,15 @@
 package com.gslab.pepper.input.serialized;
 
 import org.apache.kafka.common.serialization.Serializer;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The ObjectSerializer is custom Object serializer for kafka producer. This class takes object as input and returns byte array.
@@ -18,7 +20,8 @@ import java.util.logging.Logger;
  */
 public class ObjectSerializer implements Serializer {
 
-    private static Logger logger = Logger.getLogger(ObjectSerializer.class.getName());
+    private static final Logger LOGGER = LogManager.getLogger(ObjectSerializer.class);
+
     @Override
     public void configure(Map map, boolean b) {
         //TODO
@@ -38,7 +41,7 @@ public class ObjectSerializer implements Serializer {
             out.flush();
             retVal = bos.toByteArray();
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Failed to serialize object", e);
+            LOGGER.log(Level.ERROR, "Failed to serialize object", e);
         }
         return retVal;
     }

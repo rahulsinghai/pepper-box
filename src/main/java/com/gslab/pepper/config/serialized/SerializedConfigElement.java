@@ -1,8 +1,8 @@
 package com.gslab.pepper.config.serialized;
 
-import com.gslab.pepper.model.FieldExpressionMapping;
 import com.gslab.pepper.loadgen.BaseLoadGenerator;
 import com.gslab.pepper.loadgen.impl.SerializedLoadGenerator;
+import com.gslab.pepper.model.FieldExpressionMapping;
 import com.gslab.pepper.util.PropsKeys;
 import org.apache.jmeter.config.ConfigTestElement;
 import org.apache.jmeter.engine.event.LoopIterationEvent;
@@ -10,8 +10,9 @@ import org.apache.jmeter.engine.event.LoopIterationListener;
 import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
-import org.apache.jorphan.logging.LoggingManager;
-import org.apache.log.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.List;
 
 /**
@@ -56,7 +57,7 @@ public class SerializedConfigElement extends ConfigTestElement implements TestBe
             JMeterVariables variables = JMeterContextService.getContext().getVariables();
             variables.putObject(placeHolder, generator.nextMessage());
         } catch (Exception e) {
-            log.error("Failed to create PlaintTextLoadGenerator instance", e);
+            LOGGER.error("Failed to create PlaintTextLoadGenerator instance", e);
         }
     }
 
@@ -85,5 +86,6 @@ public class SerializedConfigElement extends ConfigTestElement implements TestBe
         this.placeHolder = placeHolder;
     }
 
-    private static final Logger log = LoggingManager.getLoggerForClass();
+    private static final Logger LOGGER = LogManager.getLogger(SerializedConfigElement.class);
+
 }

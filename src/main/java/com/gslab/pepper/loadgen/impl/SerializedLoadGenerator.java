@@ -1,11 +1,11 @@
 package com.gslab.pepper.loadgen.impl;
 
 import com.gslab.pepper.exception.PepperBoxException;
-import com.gslab.pepper.model.FieldExpressionMapping;
 import com.gslab.pepper.input.SchemaProcessor;
 import com.gslab.pepper.loadgen.BaseLoadGenerator;
-import org.apache.jorphan.logging.LoggingManager;
-import org.apache.log.Logger;
+import com.gslab.pepper.model.FieldExpressionMapping;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.util.Iterator;
@@ -23,7 +23,7 @@ public class SerializedLoadGenerator implements BaseLoadGenerator {
 
     private transient SchemaProcessor schemaProcessor = new SchemaProcessor();
 
-    private static final Logger log = LoggingManager.getLoggerForClass();
+    private static final Logger LOGGER = LogManager.getLogger(SerializedLoadGenerator.class);
 
     /**
      * SerializedLoadGenerator constructor which initializes message iterator using schemaProcessor.
@@ -37,7 +37,7 @@ public class SerializedLoadGenerator implements BaseLoadGenerator {
             this.messageIterator = schemaProcessor.getSerializedMessageIterator(inputClass, fieldExprMappings);
 
         }catch (Exception exc){
-            log.error("Please make sure that properties data type and expression function return type are compatible with each other", exc);
+            LOGGER.error("Please make sure that properties data type and expression function return type are compatible with each other", exc);
             throw new PepperBoxException(exc);
         }
     }
