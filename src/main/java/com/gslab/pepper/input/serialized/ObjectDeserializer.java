@@ -1,9 +1,8 @@
 package com.gslab.pepper.input.serialized;
 
 import org.apache.kafka.common.serialization.Deserializer;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -19,7 +18,7 @@ import java.util.Map;
  */
 public class ObjectDeserializer implements Deserializer {
 
-    private static final Logger LOGGER = LogManager.getLogger(ObjectDeserializer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ObjectDeserializer.class);
 
     @Override
     public void configure(Map map, boolean b) {
@@ -36,7 +35,7 @@ public class ObjectDeserializer implements Deserializer {
         ) {
             receivedObj = ois.readObject();
         } catch (ClassNotFoundException | IOException e) {
-            LOGGER.log(Level.ERROR, "Failed to deserialize object", e);
+            LOGGER.error("Failed to deserialize object", e);
         }
         return receivedObj;
     }

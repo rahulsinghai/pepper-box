@@ -9,8 +9,7 @@ import org.apache.jmeter.engine.event.LoopIterationListener;
 import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 
@@ -23,7 +22,7 @@ import javax.swing.*;
  */
 public class PlainTextConfigElement extends ConfigTestElement implements TestBean, LoopIterationListener {
 
-    private static final Logger LOGGER = LogManager.getLogger(PlainTextConfigElement.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlainTextConfigElement.class);
 
     //Input schema template could be json, xml, csv or custom plain text format
     private String jsonSchema;

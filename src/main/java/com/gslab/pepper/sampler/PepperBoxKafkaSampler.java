@@ -14,8 +14,8 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.protocol.SecurityProtocol;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
 
@@ -43,7 +43,7 @@ public class PepperBoxKafkaSampler extends AbstractJavaSamplerClient {
     //Message placeholder key
     private String placeHolder;
 
-    private static final Logger LOGGER = LogManager.getLogger(PepperBoxKafkaSampler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PepperBoxKafkaSampler.class);
 
     /**
      * Set default parameters and their values

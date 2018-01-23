@@ -16,11 +16,10 @@ import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -43,7 +42,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class PepperBoxLoadGenerator extends Thread {
 
-    private static final Logger LOGGER = LogManager.getLogger(PepperBoxLoadGenerator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PepperBoxLoadGenerator.class);
     private RateLimiter limiter;
     private Iterator iterator = null;
     private KafkaProducer<String, String> producer;
@@ -150,7 +149,7 @@ public class PepperBoxLoadGenerator extends Thread {
                 }
             } catch (IOException | KeeperException | InterruptedException e) {
 
-                LOGGER.log(Level.ERROR, "Failed to get broker information", e);
+                LOGGER.error("Failed to get broker information", e);
 
             }
 
@@ -231,7 +230,7 @@ public class PepperBoxLoadGenerator extends Thread {
             }
 
         } catch (Exception e) {
-            LOGGER.log(Level.ERROR, "Failed to generate load", e);
+            LOGGER.error("Failed to generate load", e);
         }
     }
 

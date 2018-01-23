@@ -1,10 +1,9 @@
 package com.gslab.pepper.input;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.net.Inet4Address;
@@ -38,7 +37,7 @@ public class FieldDataFunctions {
     //Generate sequence of number for given sequence id
     private static Map<String, AtomicLong> sequenceMap = new ConcurrentHashMap<>();
 
-    private static final Logger LOGGER = LogManager.getLogger(FieldDataFunctions.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FieldDataFunctions.class);
 
 
     /**
@@ -70,7 +69,7 @@ public class FieldDataFunctions {
             return randomTimestamp;
 
         } catch (Exception e) {
-            LOGGER.log(Level.ERROR, "Failed to parse range date", e);
+            LOGGER.error("Failed to parse range date", e);
             throw new IllegalArgumentException(e);
 
         }
@@ -90,7 +89,7 @@ public class FieldDataFunctions {
             return DateTime.now().toString(format);
 
         } catch (Exception e) {
-            LOGGER.log(Level.ERROR, "Failed to parse current date", e);
+            LOGGER.error("Failed to parse current date", e);
             throw new IllegalArgumentException(e);
 
         }
@@ -334,7 +333,7 @@ public class FieldDataFunctions {
             }
             randomIPV4 = Inet4Address.getByAddress(randomBytes).getHostAddress();
         } catch (UnknownHostException e) {
-            LOGGER.log(Level.ERROR, "Failed to generate IPV4", e);
+            LOGGER.error("Failed to generate IPV4", e);
         }
         return randomIPV4;
     }
@@ -354,7 +353,7 @@ public class FieldDataFunctions {
             }
             randomIPV6 = Inet6Address.getByAddress(randomBytes).getHostAddress();
         } catch (UnknownHostException e) {
-            LOGGER.log(Level.ERROR, "Failed to generate IPV4", e);
+            LOGGER.error("Failed to generate IPV4", e);
         }
         return randomIPV6;
     }
@@ -374,7 +373,7 @@ public class FieldDataFunctions {
 
         } catch (Exception exc) {
 
-            LOGGER.log(Level.ERROR, "failed to load first name, last name CSV files", exc);
+            LOGGER.error("failed to load first name, last name CSV files", exc);
 
         }
     }

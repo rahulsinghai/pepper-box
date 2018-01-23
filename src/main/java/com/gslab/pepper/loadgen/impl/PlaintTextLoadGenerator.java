@@ -3,10 +3,9 @@ package com.gslab.pepper.loadgen.impl;
 import com.gslab.pepper.exception.PepperBoxException;
 import com.gslab.pepper.input.SchemaProcessor;
 import com.gslab.pepper.loadgen.BaseLoadGenerator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
 import java.util.Iterator;
 /**
  * The PlaintTextLoadGenerator is custom load generator class gets invoked from iteratorStart of PlainTextConfigElement class
@@ -22,7 +21,7 @@ public class PlaintTextLoadGenerator implements BaseLoadGenerator {
 
     private transient SchemaProcessor schemaProcessor = new SchemaProcessor();
 
-    private static final Logger LOGGER = LogManager.getLogger(PlaintTextLoadGenerator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlaintTextLoadGenerator.class);
 
     /**
      * PlaintTextLoadGenerator constructor which initializes message iterator using schemaProcessor

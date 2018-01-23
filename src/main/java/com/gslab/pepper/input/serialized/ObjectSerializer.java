@@ -1,9 +1,8 @@
 package com.gslab.pepper.input.serialized;
 
 import org.apache.kafka.common.serialization.Serializer;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -20,7 +19,7 @@ import java.util.Map;
  */
 public class ObjectSerializer implements Serializer {
 
-    private static final Logger LOGGER = LogManager.getLogger(ObjectSerializer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ObjectSerializer.class);
 
     @Override
     public void configure(Map map, boolean b) {
@@ -41,7 +40,7 @@ public class ObjectSerializer implements Serializer {
             out.flush();
             retVal = bos.toByteArray();
         } catch (IOException e) {
-            LOGGER.log(Level.ERROR, "Failed to serialize object", e);
+            LOGGER.error("Failed to serialize object", e);
         }
         return retVal;
     }

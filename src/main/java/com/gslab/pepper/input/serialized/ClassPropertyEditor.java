@@ -1,6 +1,5 @@
 package com.gslab.pepper.input.serialized;
 
-import com.gslab.pepper.PepperBoxLoadGenerator;
 import com.gslab.pepper.model.FieldExpressionMapping;
 import com.gslab.pepper.util.PropsKeys;
 import org.apache.jmeter.gui.ClearGui;
@@ -9,17 +8,18 @@ import org.apache.jmeter.testbeans.gui.GenericTestBeanCustomizer;
 import org.apache.jmeter.testbeans.gui.TableEditor;
 import org.apache.jmeter.testbeans.gui.TestBeanGUI;
 import org.apache.jmeter.testbeans.gui.TestBeanPropertyEditor;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.*;
+import java.beans.PropertyDescriptor;
+import java.beans.PropertyEditor;
+import java.beans.PropertyEditorSupport;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class ClassPropertyEditor extends PropertyEditorSupport implements ActionListener, TestBeanPropertyEditor, ClearGui {
 
-    private static final Logger LOGGER = LogManager.getLogger(ClassPropertyEditor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClassPropertyEditor.class);
 
     //input class field
     private final JTextField textField = new JTextField();
@@ -158,7 +158,7 @@ public class ClassPropertyEditor extends PropertyEditorSupport implements Action
 
         } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException e) {
             JOptionPane.showMessageDialog(null, "Failed to load class properties : " + e.getMessage(), "ERROR: Failed to load class properties!" , JOptionPane.ERROR_MESSAGE);
-            LOGGER.log(Level.ERROR, "Failed to load class properties", e);
+            LOGGER.error("Failed to load class properties", e);
         }
 
     }

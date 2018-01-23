@@ -10,8 +10,7 @@ import org.apache.jmeter.engine.event.LoopIterationListener;
 import org.apache.jmeter.testbeans.TestBean;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -86,6 +85,6 @@ public class SerializedConfigElement extends ConfigTestElement implements TestBe
         this.placeHolder = placeHolder;
     }
 
-    private static final Logger LOGGER = LogManager.getLogger(SerializedConfigElement.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SerializedConfigElement.class);
 
 }

@@ -4,10 +4,9 @@ import com.gslab.pepper.exception.PepperBoxException;
 import com.gslab.pepper.input.SchemaProcessor;
 import com.gslab.pepper.loadgen.BaseLoadGenerator;
 import com.gslab.pepper.model.FieldExpressionMapping;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
 import java.util.Iterator;
 import java.util.List;
 /**
@@ -23,7 +22,7 @@ public class SerializedLoadGenerator implements BaseLoadGenerator {
 
     private transient SchemaProcessor schemaProcessor = new SchemaProcessor();
 
-    private static final Logger LOGGER = LogManager.getLogger(SerializedLoadGenerator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SerializedLoadGenerator.class);
 
     /**
      * SerializedLoadGenerator constructor which initializes message iterator using schemaProcessor.

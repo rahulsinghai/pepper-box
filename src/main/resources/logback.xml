@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration scan="true" scanPeriod="600 seconds">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>%date{ISO8601} %-5level [%-50.50logger] - %msg%n</pattern>
+        </encoder>
+        <target>System.out</target>
+    </appender>
+
+    <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder>
+            <pattern>%date{ISO8601} %X{sessionid}-%X{user} %caller{1} %-5level [%-50.50logger] - %msg%n</pattern>
+        </encoder>
+        <target>System.err</target>
+    </appender>
+
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- path to your log file, where you want to store logs -->
+        <file>./logs/pepper-box.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- rollover daily; unzip using `gunzip <filename.gz>` -->
+            <fileNamePattern>./logs/pepper-box-%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <!-- each file should be at most 100MB, keep 30 days worth of history, but at most 1GB -->
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date{ISO8601} %-5level [%-50.50logger] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="akka" level="info" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="akka.actor" level="info" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="akka.http" level="info" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="akka.stream" level="info" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="org.elasticsearch" level="error" additivity="false">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="STDERR"/>
+        <appender-ref ref="file"/>
+    </logger>
+
+    <logger name="org.elasticsearch.netty" level="error" additivity="false">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="STDERR"/>
+        <appender-ref ref="file"/>
+    </logger>
+
+    <!-- level attribute is not necessary since the level of the root level is set to DEBUG by default -->
+    <!-- ALL < TRACE < DEBUG < INFO < WARN < ERROR < OFF -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="STDERR"/>
+        <appender-ref ref="file"/>
+    </root>
+</configuration>

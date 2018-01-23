@@ -1,12 +1,10 @@
 package com.gslab.pepper.input;
 
-import com.gslab.pepper.PepperBoxLoadGenerator;
 import com.gslab.pepper.exception.PepperBoxException;
 import com.gslab.pepper.input.compile.InMemoryJavaCompiler;
 import com.gslab.pepper.util.PropsKeys;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,7 +20,7 @@ import java.util.Scanner;
  */
 public class SchemaTranslator {
 
-    private static final Logger LOGGER = LogManager.getLogger(SchemaTranslator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SchemaTranslator.class);
 
     /**
      * Creates plain text iterator
@@ -52,7 +50,7 @@ public class SchemaTranslator {
             return (Iterator) messageIterator.newInstance();
 
         } catch (Exception e) {
-            LOGGER.log(Level.ERROR, "Failed to compileSchemaClass class", e);
+            LOGGER.error("Failed to compileSchemaClass class", e);
             throw new PepperBoxException(e);
         }
     }
@@ -87,7 +85,7 @@ public class SchemaTranslator {
 
 
         } catch (Exception e) {
-            LOGGER.log(Level.ERROR, "Failed to compileSchemaClass class", e);
+            LOGGER.error("Failed to compileSchemaClass class", e);
             throw new PepperBoxException(e);
         }
     }
