@@ -7,9 +7,13 @@ import com.gslab.pepper.sampler.PepperBoxKafkaSampler;
 import com.gslab.pepper.util.ProducerKeys;
 import com.gslab.pepper.util.PropsKeys;
 import kafka.admin.AdminUtils;
+import kafka.admin.RackAwareMode;
 import kafka.server.KafkaConfig;
 import kafka.server.KafkaServer;
-import kafka.utils.*;
+import kafka.utils.MockTime;
+import kafka.utils.TestUtils;
+import kafka.utils.ZKStringSerializer$;
+import kafka.utils.ZkUtils;
 import kafka.zk.EmbeddedZookeeper;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.jmeter.config.Arguments;
@@ -21,10 +25,16 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.junit.*;
+import org.apache.kafka.common.utils.Time;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -33,10 +43,9 @@ import java.util.Properties;
  * Created by satish on 5/3/17.
  */
 public class PepperBoxSamplerTest {
-
     private static final String ZKHOST = "127.0.0.1";
     private static final String BROKERHOST = "127.0.0.1";
-    private static final String BROKERPORT = "9092";
+    private static final String BROKERPORT = "9093";
     private static final String TOPIC = "test";
 
     private EmbeddedZookeeper zkServer = null;
@@ -50,25 +59,37 @@ public class PepperBoxSamplerTest {
     @Before
     public void setup() throws IOException {
 
+        // setup Zookeeper
         zkServer = new EmbeddedZookeeper();
 
         String zkConnect = ZKHOST + ":" + zkServer.port();
         zkClient = new ZkClient(zkConnect, 30000, 30000, ZKStringSerializer$.MODULE$);
         ZkUtils zkUtils = ZkUtils.apply(zkClient, false);
 
+        // setup Broker
+        Path kafkaLogDirs = Files.createTempDirectory("kafka-");
+        kafkaLogDirs.toFile().deleteOnExit();
+
         Properties brokerProps = new Properties();
         brokerProps.setProperty("zookeeper.connect", zkConnect);
         brokerProps.setProperty("broker.id", "0");
-        brokerProps.setProperty("log.dirs", Files.createTempDirectory("kafka-").toAbsolutePath().toString());
+        brokerProps.setProperty("log.dirs", kafkaLogDirs.toAbsolutePath().toString());
         brokerProps.setProperty("listeners", "PLAINTEXT://" + BROKERHOST +":" + BROKERPORT);
+        brokerProps.setProperty("port", BROKERPORT);
+        brokerProps.setProperty("offsets.topic.replication.factor" , "1");
         KafkaConfig config = new KafkaConfig(brokerProps);
         Time mock = new MockTime();
         kafkaServer = TestUtils.createServer(config, mock);
-        //AdminUtils.createTopic(zkUtils, TOPIC, 1, 1, new Properties(), RackAwareMode.Disabled$.MODULE$);
+
+        // create topic
+        AdminUtils.createTopic(zkUtils, TOPIC, 1, 1, new Properties(), RackAwareMode.Disabled$.MODULE$);
+
+        List<KafkaServer> servers = new ArrayList<KafkaServer>();
+        servers.add(kafkaServer);
+        TestUtils.waitUntilMetadataIsPropagated(scala.collection.JavaConversions.asScalaBuffer(servers), TOPIC, 0, 5000);
 
         JMeterContext jmcx = JMeterContextService.getContext();
         jmcx.setVariables(new JMeterVariables());
-
     }
 
     @Test
@@ -103,7 +124,8 @@ public class PepperBoxSamplerTest {
         consumerProps.put("auto.offset.reset", "earliest");
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(consumerProps);
         consumer.subscribe(Arrays.asList(TOPIC));
-        ConsumerRecords<String, String> records = consumer.poll(30000);
+
+        ConsumerRecords<String, String> records = consumer.poll(50000000);
         Assert.assertEquals(1, records.count());
         for (ConsumerRecord<String, String> record : records){
             Assert.assertEquals("Failed to validate produced message", msgSent.toString(), record.value());
@@ -140,6 +162,7 @@ public class PepperBoxSamplerTest {
         Message msgSent = (Message) JMeterContextService.getContext().getVariables().getObject(PropsKeys.MSG_PLACEHOLDER);
         sampler.runTest(jmcx);
 
+        // setup consumer
         Properties consumerProps = new Properties();
         consumerProps.setProperty("bootstrap.servers", BROKERHOST + ":" + BROKERPORT);
         consumerProps.setProperty("group.id", "group0");
@@ -149,7 +172,7 @@ public class PepperBoxSamplerTest {
         consumerProps.put("auto.offset.reset", "earliest");
         KafkaConsumer<String, Message> consumer = new KafkaConsumer<>(consumerProps);
         consumer.subscribe(Arrays.asList(TOPIC));
-        ConsumerRecords<String, Message> records = consumer.poll(30000);
+        ConsumerRecords<String, Message> records = consumer.poll(50000000);
         Assert.assertEquals(1, records.count());
         for (ConsumerRecord<String, Message> record : records){
             Assert.assertEquals("Failed to validate produced message", msgSent.getMessageBody(), record.value().getMessageBody());
@@ -163,8 +186,10 @@ public class PepperBoxSamplerTest {
     public void teardown(){
         kafkaServer.shutdown();
         zkClient.close();
-        zkServer.shutdown();
-
+        try {
+            zkServer.shutdown();
+        } catch(Exception e) {
+            // Ignore exception, as deleting file is failing due to https://issues.apache.org/jira/browse/KAFKA-6291
+        }
     }
-
 }

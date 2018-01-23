@@ -1,16 +1,13 @@
 package com.gslab.pepper.test;
 
+import com.gslab.pepper.config.plaintext.PlainTextConfigElement;
 import com.gslab.pepper.config.plaintext.PlainTextConfigElementBeanInfo;
+import com.gslab.pepper.config.serialized.SerializedConfigElement;
 import com.gslab.pepper.config.serialized.SerializedConfigElementBeanInfo;
-import com.gslab.pepper.exception.PepperBoxException;
+import com.gslab.pepper.input.SchemaProcessor;
 import com.gslab.pepper.input.serialized.ClassPropertyEditor;
 import com.gslab.pepper.model.FieldExpressionMapping;
-import com.gslab.pepper.config.plaintext.PlainTextConfigElement;
-import com.gslab.pepper.config.serialized.SerializedConfigElement;
-import com.gslab.pepper.input.SchemaProcessor;
 import com.gslab.pepper.util.PropsKeys;
-import net.didion.jwnl.data.Exc;
-import org.apache.jmeter.testbeans.BeanInfoSupport;
 import org.apache.jmeter.threads.JMeterContext;
 import org.apache.jmeter.threads.JMeterContextService;
 import org.apache.jmeter.threads.JMeterVariables;
@@ -20,7 +17,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.beans.PropertyDescriptor;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -107,19 +103,19 @@ public class PepperBoxConfigElementTest {
 
     @Test(expected = Exception.class)
     public void validateClassPropertyEditor(){
-            ResourceBundle.getBundle(PlainTextConfigElement.class.getName());
-            PlainTextConfigElementBeanInfo pbeanInfo = new PlainTextConfigElementBeanInfo();
-            Assert.assertTrue("Failed to validate serialized property descriptors", pbeanInfo.getPropertyDescriptors().length == 3);
+        ResourceBundle.getBundle(PlainTextConfigElement.class.getName());
+        PlainTextConfigElementBeanInfo pbeanInfo = new PlainTextConfigElementBeanInfo();
+        Assert.assertTrue("Failed to validate serialized property descriptors", pbeanInfo.getPropertyDescriptors().length == 3);
 
-            ResourceBundle.getBundle(SerializedConfigElement.class.getName());
-            SerializedConfigElementBeanInfo sbeanInfo = new SerializedConfigElementBeanInfo();
-            Assert.assertTrue("Failed to validate serialized property descriptors", sbeanInfo.getPropertyDescriptors().length == 3);
+        ResourceBundle.getBundle(SerializedConfigElement.class.getName());
+        SerializedConfigElementBeanInfo sbeanInfo = new SerializedConfigElementBeanInfo();
+        Assert.assertTrue("Failed to validate serialized property descriptors", sbeanInfo.getPropertyDescriptors().length == 3);
 
-            PropertyDescriptor propertyDescriptor = sbeanInfo.getPropertyDescriptors()[1];
-            ClassPropertyEditor classPropertyEditor = new ClassPropertyEditor(propertyDescriptor);
-            classPropertyEditor.setValue("com.gslab.pepper.test.Message");
-            classPropertyEditor.actionPerformed(null);
-            Assert.assertEquals("Failed to validate serialized property descriptors", "com.gslab.pepper.test.Message", classPropertyEditor.getValue());
+        PropertyDescriptor propertyDescriptor = sbeanInfo.getPropertyDescriptors()[1];
+        ClassPropertyEditor classPropertyEditor = new ClassPropertyEditor(propertyDescriptor);
+        classPropertyEditor.setValue("com.gslab.pepper.test.Message");
+        classPropertyEditor.actionPerformed(null);
+        Assert.assertEquals("Failed to validate serialized property descriptors", "com.gslab.pepper.test.Message", classPropertyEditor.getValue());
     }
 
 }

@@ -3,10 +3,9 @@ package com.gslab.pepper.loadgen.impl;
 import com.gslab.pepper.exception.PepperBoxException;
 import com.gslab.pepper.input.SchemaProcessor;
 import com.gslab.pepper.loadgen.BaseLoadGenerator;
-import org.apache.jorphan.logging.LoggingManager;
-import org.apache.log.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
 import java.util.Iterator;
 /**
  * The PlaintTextLoadGenerator is custom load generator class gets invoked from iteratorStart of PlainTextConfigElement class
@@ -22,7 +21,7 @@ public class PlaintTextLoadGenerator implements BaseLoadGenerator {
 
     private transient SchemaProcessor schemaProcessor = new SchemaProcessor();
 
-    private static final Logger log = LoggingManager.getLoggerForClass();
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlaintTextLoadGenerator.class);
 
     /**
      * PlaintTextLoadGenerator constructor which initializes message iterator using schemaProcessor
@@ -33,7 +32,7 @@ public class PlaintTextLoadGenerator implements BaseLoadGenerator {
         try {
             this.messageIterator = schemaProcessor.getPlainTextMessageIterator(jsonSchema);
         }catch (Exception exc){
-            log.error("Please make sure that expressions functions are already defined and parameters are correctly passed.", exc);
+            LOGGER.error("Please make sure that expressions functions are already defined and parameters are correctly passed.", exc);
             throw new PepperBoxException(exc);
         }
     }

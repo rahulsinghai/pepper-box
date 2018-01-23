@@ -18,6 +18,8 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.ZooKeeper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,8 +31,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * The com.gslab.pepper.PepperBoxLoadGenerator standalone load generator.
@@ -42,7 +42,7 @@ import java.util.logging.Logger;
  */
 public class PepperBoxLoadGenerator extends Thread {
 
-    private static Logger LOGGER = Logger.getLogger(PepperBoxLoadGenerator.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(PepperBoxLoadGenerator.class);
     private RateLimiter limiter;
     private Iterator iterator = null;
     private KafkaProducer<String, String> producer;
@@ -149,7 +149,7 @@ public class PepperBoxLoadGenerator extends Thread {
                 }
             } catch (IOException | KeeperException | InterruptedException e) {
 
-                LOGGER.log(Level.SEVERE, "Failed to get broker information", e);
+                LOGGER.error("Failed to get broker information", e);
 
             }
 
@@ -180,7 +180,9 @@ public class PepperBoxLoadGenerator extends Thread {
 
     public void sendMessage() {
         limiter.acquire();
-        ProducerRecord<String, String> keyedMsg = new ProducerRecord<>(topic, iterator.next().toString());
+        String msg = iterator.next().toString();
+        ProducerRecord<String, String> keyedMsg = new ProducerRecord<>(topic, msg);
+        LOGGER.debug("Sending message [" + msg + "] to topic [" + topic + "]");
         producer.send(keyedMsg);
     }
 
@@ -228,7 +230,7 @@ public class PepperBoxLoadGenerator extends Thread {
             }
 
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Failed to generate load", e);
+            LOGGER.error("Failed to generate load", e);
         }
     }
 

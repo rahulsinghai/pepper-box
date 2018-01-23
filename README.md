@@ -1,10 +1,13 @@
 # Pepper-Box - Kafka Load Generator
 
-[![Build Status](https://travis-ci.org/GSLabDev/pepper-box.svg?branch=master)](https://travis-ci.org/GSLabDev/pepper-box) [![Coverage Status](https://coveralls.io/repos/github/GSLabDev/pepper-box/badge.svg?branch=master&maxAge=0)](https://coveralls.io/github/GSLabDev/pepper-box?branch=master)
+[![Build Status](https://travis-ci.org/GSLabDev/pepper-box.svg?branch=master)](https://travis-ci.org/GSLabDev/pepper-box)
+[![Coverage Status](https://coveralls.io/repos/github/GSLabDev/pepper-box/badge.svg?branch=master&maxAge=0)](https://coveralls.io/github/GSLabDev/pepper-box?branch=master)
+[![shields.io](http://img.shields.io/badge/license-Apache2-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.txt)
+[![jonato.de](https://img.shields.io/badge/Version-1.0-brightgreen.svg)](https://innFactory.de)
 
 ___
 
-Pepper-Box is kafka load generator plugin for jmeter. It allows to send kafka messages of type plain text(JSON, XML, CSV or any other custom format) as well as java serialized objects.
+Pepper-Box is kafka load generator plugin for JMeter. It allows to send kafka messages of type plain text(JSON, XML, CSV or any other custom format) as well as java serialized objects.
 
 ## Getting Started
 ___
@@ -36,7 +39,7 @@ For windows you can download oracle JDK 8 setup from [here](http://www.oracle.co
 
 #### Build Project
 ```
-mvn clean install -Djmeter.version=3.0 -Dkafka.version=0.9.0.1
+mvn clean install -DskipTests -Djmeter.version=3.3 -Dkafka.version=0.11.0.2
 ```
 JMeter and Kafka version can be passed dynamically.
 
@@ -204,7 +207,8 @@ PepperBoxLoadGenerator is console plaintext load generation utility.
 Command,
 
 ```
-java -cp pepper-box-1.0.jar  com.gslab.pepper.PepperBoxLoadGenerator --schema-file <schema file absolute path> --producer-config-file <producer properties absoulte path>  --throughput-per-producer <throughput rate per producer> --test-duration <test duration in seconds> --num-producers <number of producers>
+java -cp pepper-box-1.0.jar com.gslab.pepper.PepperBoxLoadGenerator --schema-file <schema file absolute path> --producer-config-file <producer properties absoulte path>  --throughput-per-producer <throughput rate per producer> --test-duration <test duration in seconds> --num-producers <number of producers>
+--schema-file ~/work/github/pepper-box/src/main/resources/com/gslab/pepper/input/sample.schema --producer-config-file ~/work/github/pepper-box/src/main/resources/com/gslab/pepper/input/producer.properties --throughput-per-producer 10 --test-duration 30 --num-producers 1
 ```
 Example
 
